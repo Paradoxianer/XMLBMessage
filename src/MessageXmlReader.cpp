@@ -8,10 +8,18 @@
 map<BString, int> MessageXmlReader::bmessageTypes;
 
 MessageXmlReader::MessageXmlReader(){
-    filePath=new BString("");
+    Init();
+}
 
+MessageXmlReader::MessageXmlReader(const BString &fileName){
+    Init();
+    SetTo(fileName);
+}
 
-    if (bmessageTypes.size() == 0){
+void MessageXmlReader::Init()
+{
+	filePath = new BString("");
+	   if (bmessageTypes.size() == 0){
         bmessageTypes[BString("BMessage")]=1;
         bmessageTypes[BString("bool")]=2;
         bmessageTypes[BString("int8")]=3;
@@ -28,9 +36,6 @@ MessageXmlReader::MessageXmlReader(){
     }
 }
 
-MessageXmlReader::MessageXmlReader(const BString &fileName){
-    SetTo(fileName);
-}
 
 MessageXmlReader::~MessageXmlReader(){
 }

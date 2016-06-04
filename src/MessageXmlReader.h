@@ -16,7 +16,7 @@ public:
 	MessageXmlReader();
 	MessageXmlReader(const BString &fileName);
 	~MessageXmlReader();
-
+	
 	status_t InitCheck();
 	void SetTo(const BString &fileName);
 
@@ -27,6 +27,7 @@ public:
 	 BMessage* ReadFile(const BString &fileName);
 
 private:
+	void	Init();
     BString *filePath;
     BMessage* ProcessXML(TiXmlElement *element);
     static map<BString, int>  	bmessageTypes;

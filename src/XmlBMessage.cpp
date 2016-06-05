@@ -7,7 +7,6 @@
  */
 
 
-#include <Application.h>
 #include <String.h>
 #include <File.h>
 #include <Path.h>
@@ -15,14 +14,17 @@
 #include <Mime.h>
 #include <NodeInfo.h>
 
+#include <getopt.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
 
-#include "XmlBMessageApp"
-#include "MessageXmlReader.h"
 #include "MessageXmlWriter.h"
+
+#include "MessageXmlReader.h"
+
+#include "XmlBMessage.h"
 
 
 
@@ -30,9 +32,9 @@ XmlBMessageApp::XmlBMessageApp(void)
 	: BApplication("application/x-vnd.xmlbmessage"),
 	fPrintUsage(false),
 	fToMessage(false),
+	fShow(false),
 	fOverWrite(false),
 	fArguments(0)
-	
 {
 
 }
@@ -46,38 +48,60 @@ XmlBMessageApp::~XmlBMessageApp()
 void
 XmlBMessageApp::ArgvReceived(int32 argc, char **argv)
 {
-	/*if (!strcmp(argv[2], "-f")|| !strcmp(argv[1], "-f"))
-		fArguments++;
-		fOverWrite = true;
-		return;*/
+	status_t status = B_OK;
 
-	if (!strcmp(argv[1], "--toMessage")) {
-		fArguments++;
-		fToMessage = true;
-	}
+	static struct option const kLongOptions[] = {
+		{"show", no_argument, 0, 's'},
+		{"force", no_argument, 0, 'f'},
+		{"help",no_argument, 0,'h'},
+		{NULL}
+	};
 
-	if (argc < (fArguments+2)) {
-		fPrintUsage = true;
-		return;
+	int c;
+	while ((c = getopt_long(argc, argv, "l:s:o:c:ripdh", kLongOptions, NULL))
+		!= -1) {
+		switch (c) {
+			case 's':
+				fShow = true;
+				fArguments++;
+				break;
+			case 'f':
+				fOverWrite = true;
+				fArguments++;
+				break;
+			default:
+				fPrintUsage = true;
+				fArguments++;
+				break;
+		}
 	}
-	BString inputfile("");
-	BString outputfile("");
 	
-	inputfile << argv[fArguments+1];
+	BPath inputfile		= BPath();
+	BPath outputfile	= BPath();
+	
+	inputfile.SetTo(argv[fArguments+1]);
+	if (DetectFileType(inputfile.Path()) == XML_FILE_TYPE)
+		fToMessage=true;
+	
 	
 	if ((fArguments+1) < argc)
-		if (fToMessage)
-			outputfile << argv[fArguments+1] << ".message";
-		else
-			outputfile << argv[fArguments+1] << ".xml";
+		if (fToMessage){
+			BString tmpStr=inputfile.Leaf();
+			tmpStr << ".message";
+			outputfile.SetTo(tmpStr);
+		}
+		else {
+			BString tmpStr=inputfile.Leaf();
+			tmpStr << ".xml";
+			outputfile.SetTo(tmpStr);
+		}
 	else
-		outputfile << argv[fArguments+2];
+		outputfile.SetTo(argv[fArguments+2]);
 	
-	status_t status;
 	if (fToMessage)
-		status = ToMessage(inputfile.String(), outputfile.String());
+		status = ToMessage(inputfile.Path(), outputfile.Path());
 	else
-		status = ToXML(inputfile.String(), outputfile.String());
+		status = ToXml(inputfile.Path(), outputfile.Path());
 	if (status < B_OK)
 		exit(-1);
 }
@@ -86,7 +110,7 @@ XmlBMessageApp::ArgvReceived(int32 argc, char **argv)
 void
 XmlBMessageApp::ReadyToRun(void)
 {
-	if (fPrintUsage == false)
+	if (fPrintUsage == true)
 		PrintUsage();
 
 	PostMessage(B_QUIT_REQUESTED);
@@ -102,7 +126,7 @@ XmlBMessageApp::PrintUsage(void)
 
 
 status_t
-XmlBMessageApp::ToXML(const char *inPath, const char *outPath)
+XmlBMessageApp::ToXml(const char *inPath, const char *outPath)
 {
 	BMessage	tmpMessage = BMessage();
 	BFile		tmpFile(inPath, B_READ_ONLY);
@@ -113,7 +137,6 @@ XmlBMessageApp::ToXML(const char *inPath, const char *outPath)
 		status = xmlWrite.Write(tmpMessage);
 	}
 	return status;
-	
 }
 
 
@@ -133,6 +156,19 @@ XmlBMessageApp::ToMessage(const char *inPath, const char *outPath)
 	
 }
 
+file_Type
+XmlBMessageApp::DetectFileType(const char *filePath) 
+{
+	BFile		tmpFile(filePath, B_READ_ONLY);
+	BMessage	tmpMessage	= BMessage();
+	//@todo check if the file was initalized correctly
+	status_t	status		= tmpMessage.Unflatten(&tmpFile);
+	if (status != B_OK)
+		return XML_FILE_TYPE;
+	// @todo check also if the file is a XML File.
+	else
+		return MESSAGE_FILE_TYPE;
+}
 //	#pragma mark -
 
 

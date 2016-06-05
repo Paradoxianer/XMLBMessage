@@ -10,6 +10,7 @@ MessageXmlWriter::MessageXmlWriter(){
 }
 
 MessageXmlWriter::MessageXmlWriter(const BString &fileName){
+	filePath=new BString("");
     SetTo(fileName);
 }
 

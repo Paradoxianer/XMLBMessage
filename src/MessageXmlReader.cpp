@@ -23,9 +23,9 @@ void MessageXmlReader::Init()
         bmessageTypes[BString("BMessage")]=1;
         bmessageTypes[BString("bool")]=2;
         bmessageTypes[BString("int8")]=3;
-        bmessageTypes[BString("nt16")]=4;
-        bmessageTypes[BString("nt32")]=5;
-        bmessageTypes[BString("nt64")]=6;
+        bmessageTypes[BString("int16")]=4;
+        bmessageTypes[BString("int32")]=5;
+        bmessageTypes[BString("int64")]=6;
         bmessageTypes[BString("float")]=7;
         bmessageTypes[BString("double")]=8;
         bmessageTypes[BString("string")]=9;

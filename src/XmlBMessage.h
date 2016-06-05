@@ -1,11 +1,18 @@
-#ifndef MESSAGEXMLREADER_H_INCLUDED
-#define MESSAGEXMLREADER_H_INCLUDED
+#ifndef XML_MESSAGE_H
+#define XML_MESSAGE_H
 
+#include <Application.h>
+
+enum file_Type{
+	MESSAGE_FILE_TYPE		= 1,
+	XML_FILE_TYPE			= 2,
+	UNSUPPORTED_FILE_TYPE	= 512
+};
 
 
 class XmlBMessageApp : public BApplication {
 	public:
-				XxmlBMessageApp(void);
+				XmlBMessageApp(void);
 		virtual ~XmlBMessageApp();
 
 		virtual void ReadyToRun(void);
@@ -13,15 +20,16 @@ class XmlBMessageApp : public BApplication {
 
 	private:
 		void		PrintUsage(void);
-		uint32		DetectFileType(BFile *file);
+		file_Type	DetectFileType(const char *filePath);
 		status_t	ToXml(const char *inPath, const char *outPath);
 		status_t	ToMessage(const char *inPath, const char *outPath);
 		
 		bool	fPrintUsage;
 		bool	fToMessage;
+		bool	fShow;
 		bool	fOverWrite;
 		int32	fArguments;
 		
 };
 
-#endif
+#endif 

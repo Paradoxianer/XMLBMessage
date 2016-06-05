@@ -120,7 +120,8 @@ XmlBMessageApp::ReadyToRun(void)
 void
 XmlBMessageApp::PrintUsage(void)
 {
-	printf("usage: xmlbmessage [--toMessage] [INPUT FILE] [OUTPUT FILE]  \n");
+	printf("usage: xmlbmessage [--force] [INPUT FILE] [OUTPUT FILE]  \n\n"
+		   "--force\t overwrite an existing outputfile\n");
 }
 
 
@@ -135,6 +136,7 @@ XmlBMessageApp::ToXml(const char *inPath, const char *outPath)
 	if (status == B_OK) {
 		MessageXmlWriter xmlWrite = MessageXmlWriter(outPath);
 		status = xmlWrite.Write(tmpMessage);
+		
 	}
 	return status;
 }

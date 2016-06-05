@@ -28,13 +28,13 @@ APP_MIME_SIG =
 #	means this Makefile will not work correctly if two source files with the
 #	same name (source.c or source.cpp) are included from different directories.
 #	Also note that spaces in folder names do not work well with this Makefile.
-SRCS =	XMLBMessage \
-		src/MessageXmlReader.cpp \
-		src/MessageXmlWriter.cpp \
-		src/tinyxml/tinystr.cpp \
-		src/tinyxml/tinyxml.cpp \
-		src/tinyxml/tinyxmlerror.cpp \
-		src/tinyxml//tinyxmlparser.cpp
+SRCS =	XmlBMessage.cpp \
+		MessageXmlReader.cpp \
+		MessageXmlWriter.cpp \
+		tinyxml/tinystr.cpp \
+		tinyxml/tinyxml.cpp \
+		tinyxml/tinyxmlerror.cpp \
+		tinyxml//tinyxmlparser.cpp
 
 
 #	Specify the resource definition files to use. Full or relative paths can be

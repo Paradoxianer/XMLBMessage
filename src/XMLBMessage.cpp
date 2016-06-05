@@ -20,31 +20,13 @@
 #include <stdlib.h>
 #include <strings.h>
 
+#include "XmlBMessageApp"
 #include "MessageXmlReader.h"
 #include "MessageXmlWriter.h"
 
 
-class XMLBMessageApp : public BApplication {
-	public:
-				XMLBMessageApp(void);
-		virtual ~XMLBMessageApp();
 
-		virtual void ReadyToRun(void);
-		virtual void ArgvReceived(int32 argc, char **argv);
-
-	private:
-		void		PrintUsage(void);
-		status_t	ToXML(const char *inPath, const char *outPath);
-		status_t	ToMessage(const char *inPath, const char *outPath);
-		
-		bool	fPrintUsage;
-		bool	fToMessage;
-		bool	fOverWrite;
-		int32	fArguments;
-		
-};
-
-XMLBMessageApp::XMLBMessageApp(void)
+XmlBMessageApp::XmlBMessageApp(void)
 	: BApplication("application/x-vnd.xmlbmessage"),
 	fPrintUsage(false),
 	fToMessage(false),
@@ -56,13 +38,13 @@ XMLBMessageApp::XMLBMessageApp(void)
 }
 
 
-XMLBMessageApp::~XMLBMessageApp()
+XmlBMessageApp::~XmlBMessageApp()
 {
 }
 
 
 void
-XMLBMessageApp::ArgvReceived(int32 argc, char **argv)
+XmlBMessageApp::ArgvReceived(int32 argc, char **argv)
 {
 	/*if (!strcmp(argv[2], "-f")|| !strcmp(argv[1], "-f"))
 		fArguments++;
@@ -102,7 +84,7 @@ XMLBMessageApp::ArgvReceived(int32 argc, char **argv)
 
 
 void
-XMLBMessageApp::ReadyToRun(void)
+XmlBMessageApp::ReadyToRun(void)
 {
 	if (fPrintUsage == false)
 		PrintUsage();
@@ -112,7 +94,7 @@ XMLBMessageApp::ReadyToRun(void)
 
 
 void
-XMLBMessageApp::PrintUsage(void)
+XmlBMessageApp::PrintUsage(void)
 {
 	printf("usage: xmlbmessage [--toMessage] [INPUT FILE] [OUTPUT FILE]  \n");
 }
@@ -120,7 +102,7 @@ XMLBMessageApp::PrintUsage(void)
 
 
 status_t
-XMLBMessageApp::ToXML(const char *inPath, const char *outPath)
+XmlBMessageApp::ToXML(const char *inPath, const char *outPath)
 {
 	BMessage	tmpMessage = BMessage();
 	BFile		tmpFile(inPath, B_READ_ONLY);
@@ -136,7 +118,7 @@ XMLBMessageApp::ToXML(const char *inPath, const char *outPath)
 
 
 status_t
-XMLBMessageApp::ToMessage(const char *inPath, const char *outPath)
+XmlBMessageApp::ToMessage(const char *inPath, const char *outPath)
 {
 	MessageXmlReader xmlRead = MessageXmlReader(BString(inPath));
 	BMessage	*tmpMessage=xmlRead.Read();
@@ -157,7 +139,7 @@ XMLBMessageApp::ToMessage(const char *inPath, const char *outPath)
 int
 main()
 {
-	new XMLBMessageApp();
+	new XmlBMessageApp();
 	be_app->Run();
 
 	return B_OK;

@@ -15,7 +15,7 @@ MessageXmlReader::MessageXmlReader(const BString &fileName){
     Init();
     SetTo(fileName);
 }
-
+// @todo implement B_REF_TYPE and B_POINTER_REF
 void MessageXmlReader::Init()
 {
 	filePath = new BString("");
@@ -112,11 +112,11 @@ BMessage* MessageXmlReader::ProcessXML(TiXmlElement *element){
 			}
 			break;
 			case 7:{
-					bMessage->AddInt32(element->Attribute("name"),atof(element->Attribute("value")));
+					bMessage->AddFloat(element->Attribute("name"),atof(element->Attribute("value")));
 			}
 			break;
 			case 8:{
-					bMessage->AddInt32(element->Attribute("name"),atof(element->Attribute("value")));
+					bMessage->AddDouble(element->Attribute("name"),atof(element->Attribute("value")));
 			}
 			break;
 			case 9:{

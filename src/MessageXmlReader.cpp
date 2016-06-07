@@ -76,80 +76,86 @@ BMessage* MessageXmlReader::ReadFile(const BString &fileName) {
 	return NULL;
 }
 
-BMessage* MessageXmlReader::ProcessXML(TiXmlElement *element){
+BMessage* MessageXmlReader::ProcessXML(TiXmlElement *element, BMessage *nodeMessage){
 	BMessage *bMessage	= new BMessage;
-	bMessage->what = atoi(element->Attribute("what"));
-	element= element->FirstChildElement("Data");
-	for( ; element;){
-		printf("type %s\n",element->Attribute("type"));
-		switch (	bmessageTypes[BString(element->Attribute("type"))]){
+	const char *what=element->Attribute("what");
+	if (what == NULL)
+		bMessage->what = 0;
+	else	
+		bMessage->what = atoi(what);
+	TiXmlElement *child;
+	child= element->FirstChildElement ();
+	for( ; child;){
+		printf("type: %s\n",child->Attribute("type"));
+		switch (	bmessageTypes[BString(child->Attribute("type"))]){
 			case 1:{
-				bMessage->AddMessage(element->Attribute("name"), (const BMessage *)ProcessXML(element));
+				const char *cName = child->Attribute("name");
+				bMessage->AddMessage(cName, (const BMessage *)ProcessXML(child));
 			}
 			break;
 			case 2:{
-				BString value = BString(element->Attribute("value"));
+				BString value = BString(child->Attribute("value"));
 				if (value.ICompare("TRUE") == B_OK)
-					bMessage->AddBool(element->Attribute("name"),true);
+					bMessage->AddBool(child->Attribute("name"),true);
 				else
-					bMessage->AddBool(element->Attribute("name"),false);
+					bMessage->AddBool(child->Attribute("name"),false);
 			}
 			break;
 			case 3:{
-					bMessage->AddInt8(element->Attribute("name"),atoi(element->Attribute("value")));
+					bMessage->AddInt8(child->Attribute("name"),atoi(child->Attribute("value")));
 			}
 			break;
 			case 4:{
-					bMessage->AddInt16(element->Attribute("name"),atoi(element->Attribute("value")));
+					bMessage->AddInt16(child->Attribute("name"),atoi(child->Attribute("value")));
 			}
 			break;
 			case 5:{
-					bMessage->AddInt32(element->Attribute("name"),atoi(element->Attribute("value")));
+					bMessage->AddInt32(child->Attribute("name"),atoi(child->Attribute("value")));
 			}
 			break;
 			case 6:{
-					bMessage->AddInt64(element->Attribute("name"),atol(element->Attribute("value")));
+					bMessage->AddInt64(child->Attribute("name"),atol(child->Attribute("value")));
 			}
 			break;
 			case 7:{
-					bMessage->AddFloat(element->Attribute("name"),atof(element->Attribute("value")));
+					bMessage->AddFloat(child->Attribute("name"),atof(child->Attribute("value")));
 			}
 			break;
 			case 8:{
-					bMessage->AddDouble(element->Attribute("name"),atof(element->Attribute("value")));
+					bMessage->AddDouble(child->Attribute("name"),atof(child->Attribute("value")));
 			}
 			break;
 			case 9:{
-					bMessage->AddString(element->Attribute("name"),element->Attribute("value"));
+					bMessage->AddString(child->Attribute("name"),child->Attribute("value"));
 			}
 			break;
 			case 10:{
 					BPoint tmpPoint;
-					tmpPoint.x = atof(element->Attribute("x"));
-					tmpPoint.y = atof(element->Attribute("y"));
-					bMessage->AddPoint(element->Attribute("name"),tmpPoint);
+					tmpPoint.x = atof(child->Attribute("x"));
+					tmpPoint.y = atof(child->Attribute("y"));
+					bMessage->AddPoint(child->Attribute("name"),tmpPoint);
 			}
 			break;
 			case 11:{
 					BRect tmpRect;
-					tmpRect.top			= atof(element->Attribute("top"));
-					tmpRect.left			= atof(element->Attribute("left"));
-					tmpRect.bottom	= atof(element->Attribute("bottom"));
-					tmpRect.right		= atof(element->Attribute("right"));
-					bMessage->AddRect(element->Attribute("name"),tmpRect);
+					tmpRect.top			= atof(child->Attribute("top"));
+					tmpRect.left			= atof(child->Attribute("left"));
+					tmpRect.bottom	= atof(child->Attribute("bottom"));
+					tmpRect.right		= atof(child->Attribute("right"));
+					bMessage->AddRect(child->Attribute("name"),tmpRect);
 			}
 			break;
 			case 12:{
-			}
-			break;
+ 			}
 			case 13:{
 			}
-			break;
 			case 14:{
+				printf("type: %s not yet implementd\n",child->Attribute("type"));
+
 			}
 			break;
 		}
-		element= element->NextSiblingElement();
+		child= child->NextSiblingElement();
 	}
 	return bMessage;
 }

@@ -24,7 +24,7 @@ public:
 	status_t WriteFile(const BString &fileName, const BMessage &message);
 
 private:
-    TiXmlElement	ProcessMessage(BMessage *node);
+    TiXmlElement	ProcessMessage(const char *name,BMessage *node);
     BString *filePath;
 
 };

@@ -121,7 +121,12 @@ void
 XmlBMessageApp::PrintUsage(void)
 {
 	printf("usage: xmlbmessage [--force] [INPUT FILE] [OUTPUT FILE]  \n\n"
-		   "--force\t overwrite an existing outputfile\n");
+		   "--force\t overwrite an existing outputfile\n\n"
+		   "INPUT FILE should be either a xml file in BMessage format\n"
+		   "Or should be a File with flatterned BMessages in it.\n"
+		   "If you dont specify OUTPUT FILE the INPUT FILE is taken and\n"
+		   "and .xml is added if the input file is a BMessagefile \n"
+		   "or a .message if the inputfile is a xml File\n");
 }
 
 
@@ -129,13 +134,31 @@ XmlBMessageApp::PrintUsage(void)
 status_t
 XmlBMessageApp::ToXml(const char *inPath, const char *outPath)
 {
-	BMessage	tmpMessage = BMessage();
 	BFile		tmpFile(inPath, B_READ_ONLY);
 	status_t	status;
-	status = tmpMessage.Unflatten(&tmpFile);
-	if (status == B_OK) {
-		MessageXmlWriter xmlWrite = MessageXmlWriter(outPath);
-		status = xmlWrite.Write(tmpMessage);
+	off_t		fileSize;
+	if (!tmpFile.IsReadable()) {
+		printf("cannot open \"%s\" for reading\n", inPath);
+		return 2;
+	}
+
+	if ((status = tmpFile.GetSize(&fileSize)) != B_OK) {
+		printf("cannot determine size of file \"%s\"\n", inPath);
+		return 3;
+	}
+
+	
+	for (int i = 1; tmpFile.Position() < fileSize; ++i) {
+		BMessage	tmpMessage;
+		status	 = tmpMessage.Unflatten(&tmpFile);
+		if (status != B_OK) {
+			printf("failed to unflatten message: %s\n", strerror(status));
+			return 4;
+		}
+		else {
+			MessageXmlWriter xmlWrite = MessageXmlWriter(outPath);
+			status = xmlWrite.Write(tmpMessage);
+		}
 		
 	}
 	return status;

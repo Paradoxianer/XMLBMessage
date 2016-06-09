@@ -32,7 +32,7 @@ void MessageXmlReader::Init()
         bmessageTypes[BString("BPoint")]=10;
         bmessageTypes[BString("BRect")]=11;
         bmessageTypes[BString("B_REF_TYPE")]=12;
-        bmessageTypes[BString("B_POINTER_REF")]=13;
+        bmessageTypes[BString("B_POINTER_TYPE")]=13;
     }
 }
 
@@ -146,8 +146,12 @@ BMessage* MessageXmlReader::ProcessXML(TiXmlElement *element, BMessage *nodeMess
 			}
 			break;
 			case 12:{
+				printf("type: %s not yet implementd\n",child->Attribute("type"));
+				break;
  			}
 			case 13:{
+				bMessage->AddPointer(child->Attribute("name"),(const void*)atoi(child->Attribute("value")));
+				break;
 			}
 			case 14:{
 				printf("type: %s not yet implementd\n",child->Attribute("type"));

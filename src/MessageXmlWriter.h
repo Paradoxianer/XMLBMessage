@@ -26,6 +26,7 @@ public:
 private:
     TiXmlElement	ProcessMessage(const char *name,BMessage *node);
     BString *filePath;
+    TiXmlDocument	doc;
 
 };
 

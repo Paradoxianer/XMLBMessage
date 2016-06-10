@@ -83,8 +83,8 @@ XmlBMessageApp::ArgvReceived(int32 argc, char **argv)
 	if (DetectFileType(inputfile.Path()) == XML_FILE_TYPE)
 		fToMessage=true;
 	
-	
-	if ((fArguments+1) < argc)
+	//check if there is beside the number of arguments one argv for the app name one for the input and a third one for the outpug
+	if ((fArguments+3) < argc)
 		if (fToMessage){
 			BString tmpStr=inputfile.Leaf();
 			tmpStr << ".message";
@@ -102,8 +102,10 @@ XmlBMessageApp::ArgvReceived(int32 argc, char **argv)
 		status = ToMessage(inputfile.Path(), outputfile.Path());
 	else
 		status = ToXml(inputfile.Path(), outputfile.Path());
-	if (status < B_OK)
+	if (status != B_OK){
+		fPrintUsage=true;
 		exit(-1);
+	}
 }
 
 
@@ -188,11 +190,11 @@ XmlBMessageApp::DetectFileType(const char *filePath)
 	BMessage	tmpMessage	= BMessage();
 	//@todo check if the file was initalized correctly
 	status_t	status		= tmpMessage.Unflatten(&tmpFile);
-	if (status != B_OK)
-		return XML_FILE_TYPE;
+	if (status == B_OK )
+		return MESSAGE_FILE_TYPE;
 	// @todo check also if the file is a XML File.
 	else
-		return MESSAGE_FILE_TYPE;
+		return XML_FILE_TYPE;
 }
 //	#pragma mark -
 

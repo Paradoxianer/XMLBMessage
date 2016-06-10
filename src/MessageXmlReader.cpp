@@ -2,7 +2,8 @@
 #include "tinyxml/tinyxml.h"
 #include <storage/File.h>
 #include <support/Debug.h>
-
+#include <mail/mail_encoding.h>
+#include <string.h>
 
 
 map<BString, int> MessageXmlReader::bmessageTypes;
@@ -158,6 +159,21 @@ BMessage* MessageXmlReader::ProcessXML(TiXmlElement *element, BMessage *nodeMess
 
 			}
 			break;
+			default :{
+				char 		*code	= new char[4];
+				const char 	*value	= child->Attribute("value");
+				ssize_t		size	= sizeof(value);
+				ssize_t		len;
+				char		*data	= new char[((size*2)/3)+1];
+				const char	*encode	= child->Attribute("encode");
+				//first make shure we only have 4 chars
+				strncpy(code, child->Attribute("type"), 4);
+				//for  now we just do a base64 decode
+				if (value != NULL)
+				len=decode_base64(data, value,size);
+				if (len >0)
+					bMessage->AddData(child->Attribute("name"), (uint32)*code,(const void*)data,len);
+			}
 		}
 		child= child->NextSiblingElement();
 	}

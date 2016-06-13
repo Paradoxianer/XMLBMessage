@@ -160,7 +160,7 @@ BMessage* MessageXmlReader::ProcessXML(TiXmlElement *element, BMessage *nodeMess
 			}
 			break;
 			default :{
-				uint32 		code;
+				char 		code[4];
 				const char 	*value	= child->Attribute("value");
 				ssize_t		size	= strlen(value);
 				ssize_t		len;
@@ -168,11 +168,12 @@ BMessage* MessageXmlReader::ProcessXML(TiXmlElement *element, BMessage *nodeMess
 				const char	*encode	= child->Attribute("encode");
 				//first make shure we only have 4 chars
 				strncpy((char*)&code, child->Attribute("type"), 4);
+				uint32		type = code[3] << 24 | code[2] << 16 | code[1] << 8 | code[0];
 				//for  now we just do a base64 decode
 				if (value != NULL)
 				len=decode_base64(data, value,size);
 				if (len >0)
-					bMessage->AddData(child->Attribute("name"), code,(const void*)data,len);
+					bMessage->AddData(child->Attribute("name"), type,(const void*)data,len);
 				bMessage->PrintToStream();
 			}
 		}

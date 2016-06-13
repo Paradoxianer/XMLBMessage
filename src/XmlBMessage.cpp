@@ -84,7 +84,7 @@ XmlBMessageApp::ArgvReceived(int32 argc, char **argv)
 		fToMessage=true;
 	
 	//check if there is beside the number of arguments one argv for the app name one for the input and a third one for the outpug
-	if ((fArguments+3) < argc)
+	if (argc < (fArguments+3)  )
 		if (fToMessage){
 			BString tmpStr=inputfile.Leaf();
 			tmpStr << ".message";

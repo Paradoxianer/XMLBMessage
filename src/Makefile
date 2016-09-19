@@ -96,7 +96,7 @@ LOCALES =
 #	use. For example, setting DEFINES to "DEBUG=1" will cause the compiler
 #	option "-DDEBUG=1" to be used. Setting DEFINES to "DEBUG" would pass
 #	"-DDEBUG" on the compiler's command line.
-DEFINES = 
+DEFINES =
 # DEBUG=1
 
 #	Specify the warning level. Either NONE (suppress all warnings),
@@ -105,7 +105,7 @@ WARNINGS = ALL
 
 #	With image symbols, stack crawls in the debugger are meaningful.
 #	If set to "TRUE", symbols will be created.
-SYMBOLS := 
+SYMBOLS :=
 #TRUE
 
 #	Includes debug information, which allows the binary to be debugged easily.

@@ -50,13 +50,16 @@ void MessageXmlReader::SetTo(const BString &fileName){
     filePath->SetTo(fileName);
 }
 
-BMessage* MessageXmlReader::Read(){
+BMessage* MessageXmlReader::Read(bool printXML){
+    TRACE();
     TiXmlDocument	 doc;
 	doc.LoadFile(filePath->String());
 	if (doc.Error())
         return NULL;
 	else{
-		TRACE();
+		if (printXML == true)
+  			doc.Print();
+		
 		TiXmlElement *element =	 doc.FirstChildElement("BMessage");
 		return ProcessXML(element);
 	}
@@ -65,12 +68,12 @@ BMessage* MessageXmlReader::Read(){
 
 
 BMessage* MessageXmlReader::ReadFile(const BString &fileName) {
+ 	TRACE();
    	TiXmlDocument	 doc;
 	doc.LoadFile(fileName.String());
 	if (doc.Error())
         return NULL;
 	else{
-		TRACE();
 		TiXmlElement *element =	 doc.FirstChildElement("BMessage");
 		return ProcessXML(element);
 	}

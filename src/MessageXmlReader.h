@@ -20,7 +20,7 @@ public:
 	status_t InitCheck();
 	void SetTo(const BString &fileName);
 
-	BMessage* Read();
+	BMessage* Read(bool printXML = false);
 
 	// Vielleicht zur convenience
 	// tut im endeffekt nur obiges

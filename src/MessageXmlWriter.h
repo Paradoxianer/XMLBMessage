@@ -17,7 +17,7 @@ public:
 	status_t InitCheck();
 	void SetTo(const BString &fileName);
 
-	status_t Write(BMessage &message);
+	status_t Write(BMessage &message,bool printXML = false);
 
 	// Vielleicht zur convenience
 	// tut im endeffekt nur obiges

@@ -36,8 +36,10 @@ void MessageXmlWriter::SetTo(const BString &fileName){
     
 }
 
-status_t MessageXmlWriter::Write(BMessage &message){
+status_t MessageXmlWriter::Write(BMessage &message, bool printXML){
   	doc.InsertEndChild(ProcessMessage(NULL,&message));
+  	if (printXML == true)
+  		doc.Print();
     if ( doc.SaveFile(filePath->String()) == true)
     	return B_OK;
     else

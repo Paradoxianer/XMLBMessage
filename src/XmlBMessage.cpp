@@ -1,9 +1,10 @@
 /*
- * Copyright 2016 All Rights Reserved.
+ * Copyright 2017 All Rights Reserved.
  * Distributed under the terms of the MIT license.
  *
  * Authors:
  *		Matthias Lindner
+ *		Pete Goodeve
  */
 
 
@@ -190,6 +191,10 @@ XmlBMessageApp::ToMessage(const char *inPath, const char *outPath)
 	if (fShow == true)
 			printf("reading from: %s: \n",inPath);
 	BMessage	*tmpMessage=xmlRead.Read(fShow);
+	if (tmpMessage == NULL) {
+		printf("Source '%s' is neither a file with BMessages nor valid XML!\n", inPath);
+		return B_BAD_DATA;
+	}
 	uint32		openMode = B_WRITE_ONLY |B_CREATE_FILE;
 	if (fOverWrite)
 		openMode = openMode  | B_ERASE_FILE;

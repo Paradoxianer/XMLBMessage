@@ -1,9 +1,10 @@
 #include "MessageXmlReader.h"
-#include "tinyxml/tinyxml.h"
+
 #include <storage/File.h>
 #include <support/Debug.h>
 #include <mail/mail_encoding.h>
 #include <string.h>
+#include <tinyxml.h>
 
 
 map<BString, int> MessageXmlReader::bmessageTypes;
@@ -154,7 +155,12 @@ BMessage* MessageXmlReader::ProcessXML(TiXmlElement *element, BMessage *nodeMess
 				break;
  			}
 			case 13:{
-				bMessage->AddPointer(child->Attribute("name"),(const void*)atoi(child->Attribute("value")));
+				void *p;
+				const char *value = child->Attribute("value");
+				if (value!=NULL){
+					scanf(value,"%p", &p);
+					bMessage->AddPointer(child->Attribute("name"),p);
+				}
 				break;
 			}
 			case 14:{
@@ -163,14 +169,14 @@ BMessage* MessageXmlReader::ProcessXML(TiXmlElement *element, BMessage *nodeMess
 			}
 			break;
 			default :{
-				char 		code[4];
+				char 		code[8];
 				const char 	*value	= child->Attribute("value");
 				ssize_t		size	= strlen(value);
 				ssize_t		len;
 				char		*data	= new char[((size*2)/3)+1];
 				const char	*encode	= child->Attribute("encode");
 				//first make shure we only have 4 chars
-				strncpy((char*)&code, child->Attribute("type"), 4);
+				strncpy((char*)&code, child->Attribute("type"), 8);
 				uint32		type = code[3] << 24 | code[2] << 16 | code[1] << 8 | code[0];
 				//for  now we just do a base64 decode
 				if (value != NULL)

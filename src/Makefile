@@ -30,11 +30,7 @@ APP_MIME_SIG =
 #	Also note that spaces in folder names do not work well with this Makefile.
 SRCS =	XmlBMessage.cpp \
 		MessageXmlReader.cpp \
-		MessageXmlWriter.cpp \
-		tinyxml/tinystr.cpp \
-		tinyxml/tinyxml.cpp \
-		tinyxml/tinyxmlerror.cpp \
-		tinyxml//tinyxmlparser.cpp
+		MessageXmlWriter.cpp 
 
 
 #	Specify the resource definition files to use. Full or relative paths can be
@@ -61,7 +57,7 @@ RSRCS =
 #	- 	if your library does not follow the standard library naming scheme,
 #		you need to specify the path to the library and it's name.
 #		(e.g. for mylib.a, specify "mylib.a" or "path/mylib.a")
-LIBS = be
+LIBS = be tinyxml $(STDCPPLIBS)
 
 #	Specify additional paths to directories following the standard libXXX.so
 #	or libXXX.a naming scheme. You can specify full paths or paths relative
